@@ -5,7 +5,7 @@
 [image3]: ./images/Labrador_retriever_06455.jpg "Sample Input"
 [image4]: ./images/Brittany_02625.jpg "Sample Input"
 [image5]: ./images/sample_cnn.png "Sample Model"
-
+[image6]: ./images/images_by_breed.png "Sample Images"
 
 
 
@@ -51,7 +51,8 @@ identify the resembling dog breed.
 To solve this problem I'm going to explore different techniques with Convolutional Neural Networks (CNN) and strategies like transfer learning to improve the performance of the generated models.
  
 ### Metrics
-To validate the performance of the different models that I'm going to try, the best metric is the accuracy of the model, validating the expected results against the test and validation dataset.
+To validate the performance of the different models that I'm going to try, I used the accuracy of the model, this is because this is one of the most common used metric. This is applied validating the expected results against the test and validation dataset.
+As the dataset seems to be a little imbalanced for future work we could try other of the described metrics on [this article](https://machinelearningmastery.com/tour-of-evaluation-metrics-for-imbalanced-classification/)
 
 ## Analysis
 ### Data Exploration
@@ -67,11 +68,18 @@ This dataset is labeled and contains the following information:
 2. **Human Dataset**
 - There are 13233 total human images.
 
+There different images on the training dataset are a little imbalanced as they fluctuate to between 30 and 70 images per label.
+
+The dog breed with more images in the train dataset is: 005.Alaskan_malamute with 77 images and the dog breed with fewer images in the train dataset is: 132.Xoloitzcuintli with 26 images
+
 ### Data Visualization
-I didn't create visualization of the dataset as it just contains labeled images but some of them looks like this:
+Some of them looks like this:
 ![Sample Input][image2]
 ![Sample Input][image3]
 ![Sample Input][image4]
+
+I created this graph to show the fluctuation between the number of images on the training dataset by dog breed:
+![Sample Images][image6]
 
 ## Methodology
 ### Data Preprocessing
@@ -97,6 +105,9 @@ You could find more information on [this notebook](https://github.com/carogomezt
 Finally, after testing different models we took the last one and use it to create a web application with Flask, it receives a user image and returns the dog's breed that is the most similar.
 
 ## Results
+### Model Evaluation and Validation
+For the selected model, the number of epochs that we used to train the model was 20 and as the optimizer we used the _rmsprop_, as it gave a good accuracy I didn't try different options, but if we want to explore more the model we could try other optimizers like _adam_ and also increase the number of epochs to let the model generalize better, but we need to be careful about this approach because it could guide us to an overfitting if we left the model training a lot.
+### Justification
 The model that gave the best accuracy was the one that used the Resnet50 as an initial step, this is because this is a robust model that was trained in millions of images and generalizes well. 
 You could find more information about the Resnet50 model [here](https://towardsdatascience.com/understanding-and-coding-a-resnet-in-keras-446d7ff84d33).
 The web application was created using the model with the highest accuracy and deployed on Heroku.
