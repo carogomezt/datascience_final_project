@@ -1,13 +1,20 @@
 [//]: # (Image References)
 
 [image1]: ./images/sample_dog_output.png "Sample Output"
+[image2]: ./images/Labrador_retriever_06449.jpg "Sample Input"
+[image3]: ./images/Labrador_retriever_06455.jpg "Sample Input"
+[image4]: ./images/Brittany_02625.jpg "Sample Input"
+[image5]: ./images/sample_cnn.png "Sample Model"
+
+
+
 
 # Dog Breed Classifier Project
 
 ### Table of Contents
 
 1. [Installation](#installation)
-2. [Project Motivation](#motivation)
+2. [Project Definition](#motivation)
 3. [File Descriptions](#files)
 4. [Licensing, Authors, and Acknowledgements](#licensing)
 
@@ -29,18 +36,78 @@ python app.py
 
 3. Download the [VGG-16 bottleneck features](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/DogVGG16Data.npz) for the dog dataset.  Place it in the repo, at location `path/to/dog-project/bottleneck_features`.
 
-## Project Motivation <a name="motivation"></a>
-Welcome to the Convolutional Neural Networks (CNN) project in the AI Nanodegree! In this project, you will learn how to build a pipeline that can be used within a web or mobile app to process real-world, user-supplied images.  Given an image of a dog, your algorithm will identify an estimate of the canine’s breed.  If supplied an image of a human, the code will identify the resembling dog breed.  
+## Project Definition <a name="motivation"></a>
+
+### Project Overview
+On this project id build a pipeline that can be used within a web or mobile app to processs real-wold, user-supplied images.
+I used a dataset with images of different dogs and human to train the model, the datasets are described in the previous section.
+
+### Problem Statement
+Given an image of a dog the algorithm will identify an estimate of the canine's breed. If supplied and image of a human, the code will
+identify the resembling dog breed.
 
 ![Sample Output][image1]
 
-Along with exploring state-of-the-art CNN models for classification, you will make important design decisions about the user experience for your app.  Our goal is that by completing this lab, you understand the challenges involved in piecing together a series of models designed to perform various tasks in a data processing pipeline.  Each model has its strengths and weaknesses, and engineering a real-world application often involves solving many problems without a perfect answer.  Your imperfect solution will nonetheless create a fun user experience!
+To solve this problem I'm going to explore different techniques with Convolutional Neural Networks (CNN) and strategies like transfer learning to improve the performance of the generated models.
+ 
+### Metrics
+To validate the performance of the different models that I'm going to try, the best metric is the accuracy of the model, validating the expected results against the test and validation dataset.
 
-At the end of the project was made a web page that given an image it predicts with the trained model what is the most likely dog breed of the image:
+## Analysis
+### Data Exploration
+The dataset used for this model is made up of images of dogs and humans that are used to traing the model.
+This dataset is labeled and contains the following information:
+1.  **Dogs Dataset:**
+- There are 133 total dog categories.
+- There are 8351 total dog images.
+- There are 6680 training dog images.
+- There are 835 validation dog images.
+- There are 836 test dog images.
+
+2. **Human Dataset**
+- There are 13233 total human images.
+
+### Data Visualization
+I didn't create visualization of the dataset as it just contains labeled images but some of them looks like this:
+![Sample Input][image2]
+![Sample Input][image3]
+![Sample Input][image4]
+
+## Methodology
+### Data Preprocessing
+For the human face detector we apply a filter to convert the images to gray scale before sending them to the model.
+For the dogs' dataset we scale them to 224×224 pixels, and we convert the images to tensors tha have the form of 4D arrays with shape:
+(nb_samples,rows,columns,channels)
+
+This process was made because the models needs this structure to work.
+
+### Implementation and Refinement
+I explored three different techniques with Convolutional Neural Networks (CNN). The first one was creating a CNN to Classify Dog Breeds (from Scratch) using this model:
+![Sample Model][image5]
+I tried to change the number of layers and the optimizer but the results doesn't change a lot, it rounds about 3 or 5 percent of accuracy. So I tried to increase the number of epochs and it increases the accuracy to 7%.
+
+The second approach was to use transfer learning to create the CNN using a pre train model, the first model that I used is the VGG-16 and then I only added a global average pooling layer and a fully connected layer, where the latter contains one node for each dog category and is equipped with a softmax.
+This model gave an accuracy of 40%.
+
+The last approach was also with transfer learning but using the pre trained model Resnet50 and also adding a global average pooling layer, and a fully connected layer, where the latter contains one node for each dog category and is equipped with a softmax.
+This model gave an accuracy of 79%. 
+
+You could find more information on [this notebook](https://github.com/carogomezt/datascience_final_project/blob/main/dog_app.ipynb).
+
+Finally, after testing different models we took the last one and use it to create a web application with Flask, it receives a user image and returns the dog's breed that is the most similar.
+
+## Results
+The model that gave the best accuracy was the one that used the Resnet50 as an initial step, this is because this is a robust model that was trained in millions of images and generalizes well. 
+You could find more information about the Resnet50 model [here](https://towardsdatascience.com/understanding-and-coding-a-resnet-in-keras-446d7ff84d33).
+The web application was created using the model with the highest accuracy and deployed on Heroku.
+
+## Conclusion
+The generated model has an accuracy of 79% and testing it with different scenarios we could see that it generalizes well in difficult escenarios like a person with backgrounds or multiple dogs in the same image. Also it could recognize a cat as a different element from a human or a dog. We could improve the accuracy of the model by testing it with more images to improve the generalization of the model. It would be possible with augmentation of the data (rotating or scaling the images) or adding new images to the dataset. Another option could be to test different transfer learning models like the ones described in the notebook and pick up the one who gives a better performance. And finally we could add more layers to the CNN after using a trained model that could be more robust and improve the accuracy.
+
+At the end of the project was made a web page that given an image it predicts with the trained model what is the most likely dog breed of the image. We could also improve this application by adding the same final step of the notebook, recognizing human faces and dog faces and giving custom messages to the user.
 
 ### Application web url: [https://dog-breed-dsnano-final.herokuapp.com/](https://dog-breed-dsnano-final.herokuapp.com/)
 
-This application could be improved by adding more filters to the images and just receive images with dogs or humans like the example on the notebook.
 ## File Descriptions<a name="files"></a>
 
 1. **data**: Folder with .csv files with dogs breeds.
