@@ -18,7 +18,7 @@ def path_to_tensor(img_path):
 
 
 def get_dog_names(input_file):
-    with open(f'{CURRENT_DIR}/data/{input_file}') as f:
+    with open(f'data/{input_file}') as f:
         lines = f.readlines()
         dog_names = list(lines[0].replace('\n', '').split(','))
     return dog_names
@@ -33,5 +33,3 @@ def predict_breed(model, img_path):
     dog_names = get_dog_names('dog_names.csv')
     breed = dog_names[np.argmax(predicted_vector)].split('.')[-1]
     return breed
-
-get_dog_names('dog_names.csv')

@@ -17,7 +17,7 @@ CURRENT_DIR = os.path.dirname(__file__)
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
 bootstrap = Bootstrap(app)
-model = load_model(f'{CURRENT_DIR}/saved_models/weights.best.Resnet50.hdf5')
+model = load_model(f'saved_models/weights.best.Resnet50.hdf5')
 
 
 @app.route('/', methods=['GET', 'POST'])
